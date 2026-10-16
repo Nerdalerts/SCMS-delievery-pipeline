@@ -1,0 +1,21 @@
+# Data directory: raw data is gitignored per section 2.2
+data/*
+!data/.gitkeep
+
+# Environment files
+.env
+*.env
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# OS files
+.DS_Store
+Thumbs.db

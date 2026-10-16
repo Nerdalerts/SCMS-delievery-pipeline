@@ -1,0 +1,44 @@
+country,shipment_count,late_shipment_count,late_delivery_rate,avg_delay_days
+South Africa,1403,115,0.082,-11.99
+Nigeria,1194,142,0.1189,-11.22
+Cote d'Ivoire,1083,134,0.1237,-5.38
+Uganda,779,98,0.1258,-7.58
+Vietnam,688,6,0.0087,-0.35
+Zambia,683,108,0.1581,-5.23
+Haiti,654,62,0.0948,-2.27
+Mozambique,631,116,0.1838,-1.21
+Zimbabwe,538,77,0.1431,-11.01
+Tanzania,519,66,0.1272,-4.39
+Rwanda,430,37,0.086,-5.29
+"Congo, DRC",333,83,0.2492,11.24
+Guyana,237,24,0.1013,-17.82
+Ethiopia,216,12,0.0556,-3.19
+South Sudan,164,21,0.128,-1.07
+Kenya,111,14,0.1261,0.89
+Burundi,98,38,0.3878,-8.45
+Namibia,95,1,0.0105,-0.63
+Cameroon,75,7,0.0933,-1.2
+Botswana,70,2,0.0286,-2.56
+Ghana,58,8,0.1379,-0.22
+Dominican Republic,51,4,0.0784,-10.82
+Sudan,46,0,0.0,-0.52
+Swaziland,35,3,0.0857,-5.0
+Mali,17,0,0.0,0.0
+Pakistan,15,0,0.0,0.0
+Guatemala,15,2,0.1333,-1.0
+Malawi,14,0,0.0,0.0
+Benin,13,3,0.2308,2.38
+Lebanon,8,0,0.0,0.0
+Libya,8,1,0.125,-8.75
+Angola,7,0,0.0,0.0
+Liberia,6,0,0.0,0.0
+Lesotho,4,0,0.0,0.0
+Sierra Leone,4,0,0.0,0.0
+Togo,3,1,0.3333,5.33
+Senegal,3,1,0.3333,1.0
+Afghanistan,3,0,0.0,0.0
+Burkina Faso,2,0,0.0,0.0
+Kyrgyzstan,2,0,0.0,0.0
+Kazakhstan,2,0,0.0,0.0
+Belize,1,0,0.0,-14.0
+Guinea,1,0,0.0,0.0

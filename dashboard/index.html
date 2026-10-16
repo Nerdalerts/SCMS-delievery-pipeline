@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supply Chain Shipment Lakehouse & Delay Intelligence Dashboard</title>
+  <meta name="description" content="Executive supply chain delivery reliability, logistics spend breakdown, root cause analysis, and ML delay risk prediction.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Top Application Banner & Navigation Bar -->
+  <header class="top-nav">
+    <div class="nav-container">
+      <div class="nav-branding">
+        <span class="brand-tag">USAID SCMS LAKEHOUSE</span>
+        <h1 class="nav-title">Global Health Logistics Intelligence</h1>
+      </div>
+      <div class="nav-actions">
+        <nav class="page-tabs" role="tablist" aria-label="Dashboard views">
+          <button class="tab-btn active" id="tab-page1" data-page="page1" role="tab" aria-selected="true" aria-controls="page1-view">
+            <span class="tab-num">01</span> Executive Overview
+          </button>
+          <button class="tab-btn" id="tab-page2" data-page="page2" role="tab" aria-selected="false" aria-controls="page2-view">
+            <span class="tab-num">02</span> Root Causes & Bottlenecks
+          </button>
+          <button class="tab-btn" id="tab-page3" data-page="page3" role="tab" aria-selected="false" aria-controls="page3-view">
+            <span class="tab-num">03</span> ML Delay Risk Predictor
+          </button>
+        </nav>
+        <div class="nav-meta">
+          <span class="status-pill"><span class="status-dot"></span> 10,319 Verified Lines</span>
+          <button class="action-btn" id="btn-export-summary" title="Download Gold Data Summary">Export Data</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-shell">
+
+    <!-- ================= PAGE 1: EXECUTIVE OVERVIEW ================= -->
+    <section id="page1-view" class="page-view active" role="tabpanel" aria-labelledby="tab-page1">
+      <!-- Section Header -->
+      <div class="editorial-header">
+        <div class="header-pretitle">PORTFOLIO PERFORMANCE AUDIT (2006 – 2015)</div>
+        <h2 class="editorial-title">Supply Chain Shipment Performance Overview</h2>
+        <p class="editorial-subtitle">
+          Health commodity delivery reliability and logistics spend across 10,319 verified international shipments. Cleaned via Databricks Unity Catalog bronze-to-gold pipeline.
+        </p>
+      </div>
+
+      <!-- KPI Ribbon (4 Cards) -->
+      <div class="kpi-grid">
+        <div class="kpi-card accent-card">
+          <div class="kpi-label">Overall Late Delivery Rate</div>
+          <div class="kpi-value text-accent" id="kpi-late-rate">11.5%</div>
+          <div class="kpi-caption">1,186 of 10,319 total shipments arrived late</div>
+          <div class="kpi-progress-bar">
+            <div class="kpi-progress-fill" style="width: 11.5%;"></div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">Average Days vs Plan</div>
+          <div class="kpi-value" id="kpi-avg-delay">-6.2 <span class="kpi-unit">Days</span></div>
+          <div class="kpi-caption">Negative indicates arrival ahead of schedule buffer</div>
+          <div class="kpi-badge neutral">Median: On-Time</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">Freight Share of Value</div>
+          <div class="kpi-value" id="kpi-freight-share">7.5%</div>
+          <div class="kpi-caption">Logistics cost as % of commodity invoice value</div>
+          <div class="kpi-badge">$76.7M spend on $1.02B goods</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">Total Freight & Shipped Value</div>
+          <div class="kpi-value" id="kpi-total-val">$76.7M <span class="kpi-subtext">/ $1.02B</span></div>
+          <div class="kpi-caption">Preserved 40% non-numeric contracts via SQL nulls</div>
+          <div class="kpi-badge success">Zero PII Leakage</div>
+        </div>
+      </div>
+
+      <!-- Charts Section: Two Column Grid -->
+      <div class="content-grid two-column">
+        <!-- Chart 1: Annual Delivery Reliability Trend -->
+        <div class="card chart-card">
+          <div class="card-header">
+            <div>
+              <span class="finding-badge">Key Finding</span>
+              <h3 class="card-title">Annual Delivery Reliability Trend (2006 – 2015)</h3>
+              <p class="card-subtitle">
+                Delays surged to 23.8% during the 2011 programmatic scale-up, settling between 12% and 17% in recent years.
+              </p>
+            </div>
+            <div class="chart-legend">
+              <span class="legend-item"><span class="legend-dot accent-dot"></span> Late Rate (%)</span>
+              <span class="legend-item"><span class="legend-dot muted-dot"></span> Volume</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="svg-chart-container" id="trend-chart-container">
+              <!-- Dynamically populated SVG Trend Chart -->
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="footer-stat">Peak late rate: <strong>23.8% (2011, n=1,049)</strong></div>
+            <div class="footer-stat">Lowest late rate: <strong>&lt;1.5% (2006–2008)</strong></div>
+            <div class="footer-stat">Most recent: <strong>12.0% (2015, n=997)</strong></div>
+          </div>
+        </div>
+
+        <!-- Chart 2: Freight Cost Share by Commodity and Mode -->
+        <div class="card chart-card">
+          <div class="card-header">
+            <div>
+              <span class="finding-badge">Cost Finding</span>
+              <h3 class="card-title">Freight Cost Share by Commodity and Mode</h3>
+              <p class="card-subtitle">
+                Air shipments consume 8.1% to 9.0% of product value, compared to 3.2% for truck and 3.4% for ocean.
+              </p>
+            </div>
+          </div>
+          <div class="card-body table-responsive">
+            <table class="editorial-table" id="freight-summary-table">
+              <thead>
+                <tr>
+                  <th>Commodity / Mode</th>
+                  <th class="text-right">Shipped Value</th>
+                  <th class="text-right">Freight Spend</th>
+                  <th class="text-right">Freight %</th>
+                  <th class="text-right">Sample (n)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Populated via JS from freight_value_summary.csv -->
+              </tbody>
+            </table>
+          </div>
+          <div class="card-footer">
+            <div class="footer-note">
+              *Excludes bundled contracts ("Freight Included in Commodity Cost" & "See ASN-xxxx") without dropping line rows.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PAGE 2: WHERE IT GOES WRONG ================= -->
+    <section id="page2-view" class="page-view" role="tabpanel" aria-labelledby="tab-page2">
+      <!-- Section Header -->
+      <div class="editorial-header">
+        <div class="header-pretitle">ROOT CAUSE & RISK CONCENTRATION AUDIT</div>
+        <h2 class="editorial-title">Where It Goes Wrong: Modes, Corridors & Vendors</h2>
+        <p class="editorial-subtitle">
+          Identifying structural bottlenecks, vulnerable transport corridors, and specific vendor-mode failure concentrations across the supply network.
+        </p>
+      </div>
+
+      <!-- Top Row: Mode Comparison & Country Bottlenecks -->
+      <div class="content-grid two-column">
+        <!-- Chart 1: Late Rate by Mode -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <span class="finding-badge accent-badge">Mode Risk</span>
+              <h3 class="card-title">Late Rate by Shipment Mode</h3>
+              <p class="card-subtitle">
+                Ocean (17.5%) and Truck (16.1%) fail scheduled dates nearly twice as often as Air (9.6%).
+              </p>
+            </div>
+            <span class="benchmark-note">Portfolio Avg: 11.5%</span>
+          </div>
+          <div class="card-body" id="mode-bar-chart-container">
+            <!-- Mode horizontal bars -->
+          </div>
+          <div class="card-footer">
+            <div class="footer-stat">Ocean avg delay: <strong class="text-accent">+5.87 days past due</strong></div>
+            <div class="footer-stat">Air reliability: <strong>90.4% on-time (n=6,111)</strong></div>
+          </div>
+        </div>
+
+        <!-- Chart 2: Late Rate by Country (Top 10 Volumes) -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <span class="finding-badge">Geographic Risk</span>
+              <h3 class="card-title">Late Rate by Destination (Top 10 Volume Countries)</h3>
+              <p class="card-subtitle">
+                Delivery delays are concentrated on sub-Saharan corridors; Vietnam achieves an exceptional 99.1% on-time record.
+              </p>
+            </div>
+          </div>
+          <div class="card-body" id="country-bar-chart-container">
+            <!-- Country horizontal bars -->
+          </div>
+          <div class="card-footer">
+            <div class="footer-stat">Worst corridor: <strong>Mozambique (18.4%) & Zambia (15.8%)</strong></div>
+            <div class="footer-stat">Best corridor: <strong>Vietnam (0.9% late, n=688)</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Row: High-Risk Vendor & Mode Combinations Table -->
+      <div class="card table-card">
+        <div class="card-header table-toolbar">
+          <div>
+            <span class="finding-badge accent-badge">Vendor Failure Modes</span>
+            <h3 class="card-title">High-Risk Vendor & Mode Combinations</h3>
+            <p class="card-subtitle">
+              Worst vendor-mode pairs show Ocean consignments average 9 days past deadline.
+            </p>
+          </div>
+          <div class="table-controls">
+            <div class="filter-group">
+              <label for="vendor-search">Search:</label>
+              <input type="text" id="vendor-search" placeholder="Filter vendor or mode..." class="input-search">
+            </div>
+            <div class="filter-group">
+              <label for="min-shipments-filter">Min Shipments:</label>
+              <select id="min-shipments-filter" class="select-filter">
+                <option value="10" selected>&ge; 10 shipments</option>
+                <option value="25">&ge; 25 shipments</option>
+                <option value="100">&ge; 100 shipments</option>
+                <option value="1">All volumes (&ge; 1)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="card-body table-responsive">
+          <table class="editorial-table striped" id="vendor-mode-table">
+            <thead>
+              <tr>
+                <th data-sort="vendor" class="sortable">Vendor <span class="sort-icon">&#8645;</span></th>
+                <th data-sort="shipment_mode" class="sortable">Mode <span class="sort-icon">&#8645;</span></th>
+                <th data-sort="shipment_count" class="sortable text-right">Shipments <span class="sort-icon">&#8645;</span></th>
+                <th data-sort="late_count" class="sortable text-right">Late Lines <span class="sort-icon">&#8645;</span></th>
+                <th data-sort="late_rate" class="sortable text-right">Late Rate <span class="sort-icon">&#8645;</span></th>
+                <th data-sort="avg_delay_days" class="sortable text-right">Avg Delay <span class="sort-icon">&#8645;</span></th>
+                <th class="text-center">Risk Level</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer table-pagination">
+          <div id="table-row-count">Showing 0 rows</div>
+          <div class="pagination-btns">
+            <button id="btn-prev-page" class="pager-btn" disabled>&larr; Previous</button>
+            <span id="page-indicator">Page 1</span>
+            <button id="btn-next-page" class="pager-btn">Next &rarr;</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PAGE 3: ML DELAY RISK PREDICTOR ================= -->
+    <section id="page3-view" class="page-view" role="tabpanel" aria-labelledby="tab-page3">
+      <div class="editorial-header">
+        <div class="header-pretitle">MACHINE LEARNING OPERATIONAL SIMULATOR</div>
+        <h2 class="editorial-title">Pre-Shipment Delay Risk Predictor</h2>
+        <p class="editorial-subtitle">
+          Evaluated using HistGradientBoosting (ROC AUC 0.7935, Precision 0.2608, Recall 0.6878). Restricted strictly to pre-dispatch features with zero data leakage.
+        </p>
+      </div>
+
+      <div class="content-grid two-column">
+        <!-- Interactive Model Input Form -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Consignment Specifications</h3>
+            <p class="card-subtitle">Input planned shipment parameters before dispatch to evaluate failure risk.</p>
+          </div>
+          <form id="prediction-form" class="card-body form-grid">
+            <div class="form-row">
+              <label for="pred-vendor">Supplier / Vendor:</label>
+              <select id="pred-vendor" class="form-input" required>
+                <option value="AUROBINDO PHARMA LIMITED">AUROBINDO PHARMA LIMITED</option>
+                <option value="SCMS FROM RDC">SCMS FROM RDC</option>
+                <option value="CIPLA LIMITED">CIPLA LIMITED</option>
+                <option value="ABBVIE LOGISTICS (FORMERLY ABBOTT LOGISTICS BV)">ABBVIE LOGISTICS</option>
+                <option value="BIO-RAD LABORATORIES (FRANCE)">BIO-RAD LABORATORIES</option>
+                <option value="ORGENICS, LTD">ORGENICS, LTD</option>
+                <option value="S. BUYS WHOLESALER">S. BUYS WHOLESALER</option>
+                <option value="OTHER">Other / Regional Vendor</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="pred-country">Destination Country:</label>
+              <select id="pred-country" class="form-input" required>
+                <option value="Cote d'Ivoire">Cote d'Ivoire (High Delay Lane)</option>
+                <option value="Uganda">Uganda (High Delay Lane)</option>
+                <option value="Mozambique">Mozambique (High Delay Lane)</option>
+                <option value="Zambia">Zambia</option>
+                <option value="Nigeria">Nigeria</option>
+                <option value="South Africa" selected>South Africa</option>
+                <option value="Haiti">Haiti</option>
+                <option value="Vietnam">Vietnam (High Reliability Lane)</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="pred-mode">Shipment Mode:</label>
+              <select id="pred-mode" class="form-input" required>
+                <option value="Ocean">Ocean Freight (17.5% baseline delay)</option>
+                <option value="Truck">Road Truck (16.1% baseline delay)</option>
+                <option value="Air Charter">Air Charter (11.5% baseline delay)</option>
+                <option value="Air" selected>Scheduled Air (9.6% baseline delay)</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="pred-product">Commodity Group:</label>
+              <select id="pred-product" class="form-input" required>
+                <option value="ARV" selected>ARV (Antiretroviral)</option>
+                <option value="HRDT">HRDT (HIV Rapid Diagnostic Test)</option>
+                <option value="ANTM">ANTM (Antimalarial)</option>
+                <option value="ACT">ACT</option>
+                <option value="MRDT">MRDT (Malaria Rapid Diagnostic Test)</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="pred-lead-time">Planned Lead Time (Days):</label>
+              <input type="number" id="pred-lead-time" class="form-input" value="90" min="5" max="730" required>
+              <span class="field-hint">Days between PO Sent and Scheduled Delivery</span>
+            </div>
+
+            <div class="form-row">
+              <label for="pred-line-value">Invoice Line Value (USD):</label>
+              <input type="number" id="pred-line-value" class="form-input" value="125000" min="100" max="10000000" required>
+            </div>
+
+            <div class="form-row">
+              <label for="pred-weight">Cargo Weight (Kilograms):</label>
+              <input type="number" id="pred-weight" class="form-input" value="1200" min="1" max="100000" required>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="primary-btn" id="btn-predict-risk">Assess Delay Risk</button>
+              <button type="button" class="secondary-btn" id="btn-preset-highrisk">Load High Risk Scenario</button>
+              <button type="button" class="secondary-btn" id="btn-preset-lowrisk">Load Safe Scenario</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Prediction Result Output Card -->
+        <div class="card result-card">
+          <div class="card-header">
+            <h3 class="card-title">Risk Assessment Output</h3>
+            <span class="badge" id="risk-score-badge">Gradient Boosting Output</span>
+          </div>
+          <div class="card-body">
+            <div class="risk-meter-container">
+              <div class="risk-gauge">
+                <div class="gauge-arc-bg"></div>
+                <div class="gauge-needle" id="gauge-needle" style="transform: rotate(45deg);"></div>
+                <div class="gauge-center-circle">
+                  <span class="risk-prob-value" id="res-risk-prob">24.5%</span>
+                  <span class="risk-prob-label">Delay Probability</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="risk-verdict-box" id="res-verdict-box">
+              <div class="verdict-title" id="res-verdict-title">Moderate Delay Risk</div>
+              <p class="verdict-desc" id="res-verdict-desc">
+                This shipment matches traits of routes with occasional congestion, but scheduled lead time buffer helps reduce failure probability.
+              </p>
+            </div>
+
+            <div class="drivers-box">
+              <h4 class="drivers-title">Top Predictive Factor Influences:</h4>
+              <ul class="drivers-list" id="res-drivers-list">
+                <li><span class="driver-tag">Mode</span> <strong>Scheduled Air</strong> reduces risk relative to Ocean/Truck corridors.</li>
+                <li><span class="driver-tag">Destination</span> Corridor exhibits average customs throughput.</li>
+                <li><span class="driver-tag">Buffer</span> 90-day lead time provides adequate operational margin.</li>
+              </ul>
+            </div>
+
+            <div class="alert-box note">
+              <strong>Model Boundary:</strong> Trained on pre-shipment historical parameters. Does not account for sudden exogenous port strikes or force majeure weather anomalies.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="editorial-footer">
+    <div class="footer-container">
+      <div class="footer-left">
+        <strong>Supply Chain Lakehouse & Delay Intelligence</strong> &bull; Databricks Unity Catalog Architecture (Bronze &rarr; Silver &rarr; Gold)
+      </div>
+      <div class="footer-right">
+        <span>Dataset: USAID SCMS Delivery History</span> &bull; <span>10,319 Clean Rows</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Tooltip Element -->
+  <div id="chart-tooltip" class="chart-tooltip" style="display: none;"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

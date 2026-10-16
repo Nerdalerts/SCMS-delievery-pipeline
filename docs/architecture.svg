@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" width="100%" height="100%">
+  <defs>
+    <marker id="arw" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0 0 L8 4 L0 8 Z" fill="#475569"/>
+    </marker>
+    <marker id="arw-red" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0 0 L8 4 L0 8 Z" fill="#C2410C"/>
+    </marker>
+    <style>
+      .h1   { font: 700 22px "Inter","Helvetica Neue",Arial,sans-serif; fill: #0F172A; }
+      .sub  { font: 400 13px "Inter","Helvetica Neue",Arial,sans-serif; fill: #64748B; }
+      .lane { font: 700 11px "Inter","Helvetica Neue",Arial,sans-serif; letter-spacing: 1.6px; }
+      .ttl  { font: 700 15px "Inter","Helvetica Neue",Arial,sans-serif; fill: #0F172A; }
+      .txt  { font: 400 12px "Inter","Helvetica Neue",Arial,sans-serif; fill: #334155; }
+      .mono { font: 500 11.5px "JetBrains Mono",Consolas,"Courier New",monospace; fill: #1E293B; }
+      .lbl  { font: 600 10px "Inter","Helvetica Neue",Arial,sans-serif; fill: #475569; }
+      .card { fill: #FFFFFF; stroke: #E2E8F0; stroke-width: 1.2; }
+      .flow { stroke: #475569; stroke-width: 1.6; fill: none; marker-end: url(#arw); }
+      .div  { stroke: #EEF2F6; stroke-width: 1; }
+    </style>
+  </defs>
+
+  <!-- Canvas -->
+  <rect width="1200" height="500" fill="#F8FAFC"/>
+
+  <!-- Header -->
+  <text x="40" y="46" class="h1">SCMS Delivery Pipeline · Medallion Lakehouse</text>
+  <text x="40" y="68" class="sub">Public USAID shipment data → Delta tables (bronze / silver / gold) → dashboard and ML experiments</text>
+
+  <!-- Lane headers -->
+  <text x="40"   y="106" class="lane" fill="#334155">01  SOURCE</text>
+  <text x="250"  y="106" class="lane" fill="#9A5B25">02  BRONZE</text>
+  <text x="480"  y="106" class="lane" fill="#64748B">03  SILVER</text>
+  <text x="740"  y="106" class="lane" fill="#A87A0B">04  GOLD</text>
+  <text x="1000" y="106" class="lane" fill="#1D4ED8">05  CONSUME</text>
+
+  <!-- 01 Source -->
+  <rect x="40" y="120" width="170" height="150" rx="4" class="card"/>
+  <path d="M40 124 Q40 120 44 120 H206 Q210 120 210 124 Z" fill="#334155"/>
+  <text x="56" y="150" class="ttl">Raw CSV</text>
+  <text x="56" y="170" class="mono">scms_delivery.csv</text>
+  <line x1="56" y1="184" x2="194" y2="184" class="div"/>
+  <circle cx="59" cy="202" r="2" fill="#94A3B8"/><text x="68" y="206" class="txt">USAID public dataset</text>
+  <circle cx="59" cy="220" r="2" fill="#94A3B8"/><text x="68" y="224" class="txt">Shipment-level rows</text>
+  <circle cx="59" cy="238" r="2" fill="#94A3B8"/><text x="68" y="242" class="txt">Untyped strings</text>
+
+  <!-- 02 Bronze -->
+  <rect x="250" y="120" width="190" height="150" rx="4" class="card"/>
+  <path d="M250 124 Q250 120 254 120 H436 Q440 120 440 124 Z" fill="#9A5B25"/>
+  <text x="266" y="150" class="ttl">Bronze</text>
+  <text x="266" y="170" class="mono">supplychain.bronze</text>
+  <line x1="266" y1="184" x2="424" y2="184" class="div"/>
+  <circle cx="269" cy="202" r="2" fill="#94A3B8"/><text x="278" y="206" class="txt">Raw rows stored as Delta</text>
+  <circle cx="269" cy="220" r="2" fill="#94A3B8"/><text x="278" y="224" class="txt">+ ingestion timestamp</text>
+  <circle cx="269" cy="238" r="2" fill="#94A3B8"/><text x="278" y="242" class="txt">Source kept as-is</text>
+
+  <!-- 03 Silver -->
+  <rect x="480" y="120" width="220" height="150" rx="4" class="card"/>
+  <path d="M480 124 Q480 120 484 120 H696 Q700 120 700 124 Z" fill="#64748B"/>
+  <text x="496" y="150" class="ttl">Silver</text>
+  <text x="496" y="170" class="mono">supplychain.silver.shipments</text>
+  <line x1="496" y1="184" x2="684" y2="184" class="div"/>
+  <circle cx="499" cy="202" r="2" fill="#94A3B8"/><text x="508" y="206" class="txt">Types parsed (dates, numerics)</text>
+  <circle cx="499" cy="220" r="2" fill="#94A3B8"/><text x="508" y="224" class="txt">Fields standardized</text>
+  <circle cx="499" cy="238" r="2" fill="#94A3B8"/><text x="508" y="242" class="txt">Quality checks applied</text>
+
+  <!-- 04 Gold -->
+  <rect x="740" y="120" width="220" height="150" rx="4" class="card"/>
+  <path d="M740 124 Q740 120 744 120 H956 Q960 120 960 124 Z" fill="#A87A0B"/>
+  <text x="756" y="150" class="ttl">Gold <tspan class="txt" fill="#64748B">· SQL aggregates</tspan></text>
+  <text x="756" y="170" class="mono">supplychain.gold</text>
+  <line x1="756" y1="184" x2="944" y2="184" class="div"/>
+  <text x="756" y="204" class="mono">late_rates_by_vendor</text>
+  <text x="756" y="221" class="mono">late_rates_by_mode</text>
+  <text x="756" y="238" class="mono">late_rates_by_country</text>
+  <text x="756" y="255" class="mono">freight_value_summary</text>
+
+  <!-- 05 Consume: Dashboard -->
+  <rect x="1000" y="120" width="160" height="70" rx="4" class="card"/>
+  <path d="M1000 124 Q1000 120 1004 120 H1156 Q1160 120 1160 124 Z" fill="#1D4ED8"/>
+  <text x="1016" y="146" class="ttl">Dashboard</text>
+  <text x="1016" y="165" class="txt">Late-rate views</text>
+  <text x="1016" y="180" class="txt">CSV exports</text>
+
+  <!-- 05 Consume: MLflow -->
+  <rect x="1000" y="200" width="160" height="70" rx="4" class="card"/>
+  <path d="M1000 204 Q1000 200 1004 200 H1156 Q1160 200 1160 204 Z" fill="#1D4ED8"/>
+  <text x="1016" y="226" class="ttl">MLflow</text>
+  <text x="1016" y="245" class="txt">Baseline vs GBDT</text>
+  <text x="1016" y="260" class="txt">Tracked runs</text>
+
+  <!-- Dead-letter -->
+  <rect x="480" y="330" width="220" height="90" rx="4" fill="#FFF7ED" stroke="#C2410C" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="496" y="356" class="ttl" fill="#9A3412">Dead-letter table</text>
+  <text x="496" y="376" class="mono" fill="#9A3412">silver.rejected_rows</text>
+  <text x="496" y="396" class="txt">Rows that fail checks are</text>
+  <text x="496" y="411" class="txt">quarantined, not silently dropped</text>
+
+  <!-- Main flow -->
+  <path d="M210 195 H246" class="flow"/>
+  <text x="229" y="187" class="lbl" text-anchor="middle">load</text>
+
+  <path d="M440 195 H476" class="flow"/>
+  <text x="459" y="187" class="lbl" text-anchor="middle">validate</text>
+
+  <path d="M700 195 H736" class="flow"/>
+  <text x="719" y="187" class="lbl" text-anchor="middle">SQL</text>
+
+  <path d="M960 155 H996" class="flow"/>
+  <text x="979" y="147" class="lbl" text-anchor="middle">serve</text>
+
+  <!-- Reject path -->
+  <path d="M590 270 V326" stroke="#C2410C" stroke-width="1.6" stroke-dasharray="5 4" fill="none" marker-end="url(#arw-red)"/>
+  <text x="598" y="303" class="lbl" fill="#C2410C">fail</text>
+
+  <!-- Features to MLflow -->
+  <path d="M660 270 V300 H980 V235 H996" class="flow"/>
+  <text x="820" y="293" class="lbl" text-anchor="middle">shipment-level features</text>
+
+  <!-- Legend -->
+  <line x1="40" y1="455" x2="1160" y2="455" stroke="#E2E8F0" stroke-width="1"/>
+  <line x1="40" y1="477" x2="68" y2="477" stroke="#475569" stroke-width="1.6"/>
+  <text x="76" y="481" class="txt">Data flow</text>
+  <line x1="160" y1="477" x2="188" y2="477" stroke="#C2410C" stroke-width="1.6" stroke-dasharray="5 4"/>
+  <text x="196" y="481" class="txt">Quarantine path</text>
+  <text x="1160" y="481" class="txt" fill="#94A3B8" text-anchor="end">Source: USAID Supply Chain Management System (SCMS) Delivery History</text>
+</svg>

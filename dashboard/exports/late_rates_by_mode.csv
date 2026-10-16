@@ -1,0 +1,6 @@
+shipment_mode,shipment_count,late_shipment_count,late_delivery_rate,avg_delay_days
+Air,6111,587,0.0961,-3.75
+Truck,2828,455,0.1609,-9.93
+Air Charter,650,75,0.1154,-19.04
+Ocean,371,65,0.1752,5.87
+Unknown,359,4,0.0111,-1.49
